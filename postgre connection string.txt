@@ -1,0 +1,1 @@
+postgresql://Leino2604:AZnN2sCXGo1M@ep-lingering-pine-a1f3azpf.ap-southeast-1.aws.neon.tech/crawler-app-db?sslmode=require
