@@ -3,7 +3,8 @@ exports.allAccess = (req, res) => {
 };
 
 exports.UserBoard = (req, res) => {
-  const role = req.user ? req.user.role : 'Free'; // Handle case where user might not be defined
+  // console.log(req);
+  const role = req.params.role ? req.params.role : 'Free'; // Handle case where user might not be defined
   res.status(200).json({ message: `${role} Content` });
 };
 
