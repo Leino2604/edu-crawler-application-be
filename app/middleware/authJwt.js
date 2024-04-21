@@ -86,9 +86,9 @@ checkRole = async (req, res, next, requiredRole) => {
 };
 
 const authJwt = {
-  verifyToken: this.verifyToken,
-  isAdmin: this.isAdmin,
-  checkRole: this.checkRole,
+  verifyToken: verifyToken,
+  isAdmin: isAdmin,
+  checkRole: checkRole,
 };
 
 module.exports = authJwt;
