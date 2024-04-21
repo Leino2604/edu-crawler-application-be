@@ -28,16 +28,32 @@ const checkDuplicateUsernameOrMail = async (req, res, next) => {
   }
 };
 
-const checkRolesExisted = (req, res, next) => {
+const checkRolesExisted = async (req, res, next) => {
   if (req.body.Role) {
-    if (req.body.Role !== "Admin" && req.body.Role !== "User") {
-      res.status(400).send({
-        message: "Failed! Role does not exist"
-      });
-      return;
+    const query = `
+      SELECT EXISTS (SELECT 1 FROM public."Role" WHERE "Name" = $1);
+    `;
+
+    try {
+      const result = await pool.query(query, [req.body.Role]);
+
+      if (!result.rows[0].exists) {
+        // Role doesn't exist, assign 'Free' role
+        req.body.Role = 'Free';
+        next();
+      } else {
+        // Role exists, proceed with the provided role
+        next();
+      }
+    } catch (error) {
+      console.error('Error checking for existing role:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
+  } else {
+    // No role provided, assign 'Free' role
+    req.body.Role = 'Free';
+    next();
   }
-  next();
 };
 
 const verifySignUp = {
