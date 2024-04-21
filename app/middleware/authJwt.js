@@ -47,8 +47,10 @@ isAdmin = async (req, res, next) => {
   }
 };
 
-checkRole = async (req, res, next, requiredRole) => {
+checkRole = async (req, res, next) => {
   try {
+    // console.log(req);
+    const requiredRole = capitalizeFirstLetter(req.params.role);
     if (!req.userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -72,18 +74,23 @@ checkRole = async (req, res, next, requiredRole) => {
 
     const requiredRoleResult = await pool.query(requiredRoleQuery, [requiredRole]);
     const requiredRolePriority = requiredRoleResult.rows[0].Priority;
+    console.log(userRolePriority, requiredRolePriority);
 
     // Check if user's role priority is higher than or equal to the required role
     if (userRolePriority <= requiredRolePriority) {
       next();
     } else {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Required Higher Tier' });
     }
   } catch (error) {
     console.error('Error checking role:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 const authJwt = {
   verifyToken: verifyToken,
