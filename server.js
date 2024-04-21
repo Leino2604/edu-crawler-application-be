@@ -5,7 +5,7 @@ const { Client } = require('pg');
 const app = express();
 
 var corsOptions = {
-  origin: "https://edu-crawler-application-be.onrender.com:10000"
+  origin: "https://edu-crawler-application-be.onrender.com:9000"
 };
 
 app.use(cors(corsOptions));
@@ -46,29 +46,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
-// // Db config
-// const db = require("./app/models");
-// const Role = db.ROLES;
-
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Db');
-//   // initial();
-// });
-
-// function initial() {
-//     Role.create({
-//       id: 1,
-//       name: "User"
-//     });
-   
-//     Role.create({
-//       id: 2,
-//       name: "Manager"
-//     });
-   
-//     Role.create({
-//       id: 3,
-//       name: "Admin"
-//     });
-//   }

@@ -30,27 +30,5 @@ module.exports = function(app) {
     controller.AdminBoard
   );
 
-  app.get(
-    "/api/test/pro",
-    [authJwt.verifyToken, authJwt.isPro],
-    controller.ProUserBoard
-  );
-
-  app.get(
-    "/api/test/standard",
-    [authJwt.verifyToken, authJwt.isStandard],
-    controller.StandardUserBoard
-  );
-
-  app.get(
-    "/api/test/basic",
-    [authJwt.verifyToken, authJwt.isBasic],
-    controller.BasicUserBoard
-  );
-
-  app.get(
-    "/api/test/free",
-    [authJwt.verifyToken, authJwt.isFree],
-    controller.FreeUserBoard
-  );
+  app.get("/api/test/:role", [authJwt.verifyToken, authJwt.checkRole], controller.UserBoard);
 };

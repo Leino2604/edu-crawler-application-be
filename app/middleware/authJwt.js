@@ -1,5 +1,3 @@
-// const db = require("../models/index.js");
-// const User = db.user;
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const pool = require('../utils/db_connect');
@@ -88,13 +86,10 @@ checkRole = async (req, res, next, requiredRole) => {
 };
 
 const authJwt = {
-  verifyToken: verifyToken,
-  isAdmin: isAdmin,
-  isPro: (req, res, next) => checkRole(req, res, next, 'Pro'),
-  isStandard: (req, res, next) => checkRole(req, res, next, 'Standard'),
-  isBasic: (req, res, next) => checkRole(req, res, next, 'Basic'),
-  isFree: (req, res, next) => checkRole(req, res, next, 'Free'),
+  verifyToken,
+  checkRole,
 };
+
 module.exports = authJwt;
 
   // isModerator = (req, res, next) => {

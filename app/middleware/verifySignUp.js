@@ -1,8 +1,3 @@
-// const db = require("../models");
-// const pg = require("pg");
-// const ROLES = db.ROLES;
-// const User = db.user;
-
 const pool = require('../utils/db_connect');
 
 const checkDuplicateUsernameOrMail = async (req, res, next) => {
