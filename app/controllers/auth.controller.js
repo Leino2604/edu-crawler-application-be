@@ -13,18 +13,18 @@ const pool = require('../utils/db_connect');
 exports.signup = async (req, res) => {
   console.log(req.body);
   try {
-    const { Username, Mail, Password, FullName, Phone, Role } = req.body;
+    const { Username, Mail, Password, FullName, Phone, Role, RoleID } = req.body;
 
     // Hash the password using bcrypt
     const hashedPassword = bcrypt.hashSync(Password, 8);
 
     const query = `
-    INSERT INTO public."User" ("Username", "Mail", "Password", "FullName", "Phone", "Role")
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO public."User" ("Username", "Mail", "Password", "FullName", "Phone", "Role", "RoleID")
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
     `;
 
-    const result = await pool.query(query, [Username, Mail, hashedPassword, FullName, Phone, Role]);
+    const result = await pool.query(query, [Username, Mail, hashedPassword, FullName, Phone, Role, RoleID]);
 
     const newUser = result.rows[0]; // Get the newly inserted user data
 
