@@ -40,6 +40,7 @@ const checkRolesExisted = async (req, res, next) => {
       if (!result.rows[0].exists) {
         // Role doesn't exist, assign 'Free' role
         req.body.Role = 'Free';
+        req.body.RoleID = 2;
         next();
       } else {
         // Role exists, proceed with the provided role
@@ -52,6 +53,7 @@ const checkRolesExisted = async (req, res, next) => {
   } else {
     // No role provided, assign 'Free' role
     req.body.Role = 'Free';
+    req.body.RoleID = 2;
     next();
   }
 };

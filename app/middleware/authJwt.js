@@ -49,106 +49,40 @@ isAdmin = async (req, res, next) => {
   }
 };
 
-isPro = async (req, res, next) => {
+checkRole = async (req, res, next, requiredRole) => {
   try {
     if (!req.userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
+    // Retrieve user's current role and priority
     const query = `
-      SELECT "Role" FROM public."User"
-      WHERE "ID" = $1;
+      SELECT r."Name", r."Priority"
+      FROM public."User" AS u
+      LEFT JOIN public."Role" AS r ON u."Role" = r."Name"
+      WHERE u."ID" = $1;
     `;
 
     const result = await pool.query(query, [req.userId]);
-    const userRole = result.rows[0].Role;
+    const userRole = result.rows[0].Name;
+    const userRolePriority = result.rows[0].Priority;
 
-    const allowedRoles = ['Admin', 'Pro']; // Roles allowed for this route
-    if (!allowedRoles.includes(userRole)) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    next();
-  } catch (error) {
-    console.error('Error checking Pro role:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-isStandard = async (req, res, next) => {
-  try {
-    if (!req.userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const query = `
-      SELECT "Role" FROM public."User"
-      WHERE "ID" = $1;
+    // Retrieve required role priority
+    const requiredRoleQuery = `
+      SELECT "Priority" FROM public."Role" WHERE "Name" = $1;
     `;
 
-    const result = await pool.query(query, [req.userId]);
-    const userRole = result.rows[0].Role;
+    const requiredRoleResult = await pool.query(requiredRoleQuery, [requiredRole]);
+    const requiredRolePriority = requiredRoleResult.rows[0].Priority;
 
-    const allowedRoles = ['Admin', 'Pro', 'Standard']; // Roles allowed for this route
-    if (!allowedRoles.includes(userRole)) {
+    // Check if user's role priority is higher than or equal to the required role
+    if (userRolePriority <= requiredRolePriority) {
+      next();
+    } else {
       return res.status(403).json({ message: 'Forbidden' });
     }
-
-    next();
   } catch (error) {
-    console.error('Error checking Standard role:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-isBasic = async (req, res, next) => {
-  try {
-    if (!req.userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const query = `
-      SELECT "Role" FROM public."User"
-      WHERE "ID" = $1;
-    `;
-
-    const result = await pool.query(query, [req.userId]);
-    const userRole = result.rows[0].Role;
-
-    const allowedRoles = ['Admin', 'Pro', 'Standard', 'Basic']; // Roles allowed for this route
-    if (!allowedRoles.includes(userRole)) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    next();
-  } catch (error) {
-    console.error('Error checking Basic role:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-isFree = async (req, res, next) => {
-  try {
-    if (!req.userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const query = `
-      SELECT "Role" FROM public."User"
-      WHERE "ID" = $1;
-    `;
-
-    const result = await pool.query(query, [req.userId]);
-    const userRole = result.rows[0].Role;
-
-    const allowedRoles = ['Admin', 'Pro', 'Standard', 'Basic', 'Free']; // Roles allowed for this route
-    if (!allowedRoles.includes(userRole)) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    next();
-  } catch (error) {
-    console.error('Error checking Free role:', error);
+    console.error('Error checking role:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -156,11 +90,10 @@ isFree = async (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isPro: isPro,
-  isStandard: isStandard,
-  isBasic: isBasic,
-  isAdmin: isAdmin,
-  isFree: isFree,
+  isPro: (req, res, next) => checkRole(req, res, next, 'Pro'),
+  isStandard: (req, res, next) => checkRole(req, res, next, 'Standard'),
+  isBasic: (req, res, next) => checkRole(req, res, next, 'Basic'),
+  isFree: (req, res, next) => checkRole(req, res, next, 'Free'),
 };
 module.exports = authJwt;
 
@@ -240,3 +173,107 @@ module.exports = authJwt;
   //     return;
   //   });
   // });
+
+// isPro = async (req, res, next) => {
+//   try {
+//     if (!req.userId) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+
+//     const query = `
+//       SELECT "Role" FROM public."User"
+//       WHERE "ID" = $1;
+//     `;
+
+//     const result = await pool.query(query, [req.userId]);
+//     const userRole = result.rows[0].Role;
+
+//     const allowedRoles = ['Admin', 'Pro']; // Roles allowed for this route
+//     if (!allowedRoles.includes(userRole)) {
+//       return res.status(403).json({ message: 'Forbidden' });
+//     }
+
+//     next();
+//   } catch (error) {
+//     console.error('Error checking Pro role:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
+
+// isStandard = async (req, res, next) => {
+//   try {
+//     if (!req.userId) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+
+//     const query = `
+//       SELECT "Role" FROM public."User"
+//       WHERE "ID" = $1;
+//     `;
+
+//     const result = await pool.query(query, [req.userId]);
+//     const userRole = result.rows[0].Role;
+
+//     const allowedRoles = ['Admin', 'Pro', 'Standard']; // Roles allowed for this route
+//     if (!allowedRoles.includes(userRole)) {
+//       return res.status(403).json({ message: 'Forbidden' });
+//     }
+
+//     next();
+//   } catch (error) {
+//     console.error('Error checking Standard role:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
+
+// isBasic = async (req, res, next) => {
+//   try {
+//     if (!req.userId) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+
+//     const query = `
+//       SELECT "Role" FROM public."User"
+//       WHERE "ID" = $1;
+//     `;
+
+//     const result = await pool.query(query, [req.userId]);
+//     const userRole = result.rows[0].Role;
+
+//     const allowedRoles = ['Admin', 'Pro', 'Standard', 'Basic']; // Roles allowed for this route
+//     if (!allowedRoles.includes(userRole)) {
+//       return res.status(403).json({ message: 'Forbidden' });
+//     }
+
+//     next();
+//   } catch (error) {
+//     console.error('Error checking Basic role:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
+
+// isFree = async (req, res, next) => {
+//   try {
+//     if (!req.userId) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+
+//     const query = `
+//       SELECT "Role" FROM public."User"
+//       WHERE "ID" = $1;
+//     `;
+
+//     const result = await pool.query(query, [req.userId]);
+//     const userRole = result.rows[0].Role;
+
+//     const allowedRoles = ['Admin', 'Pro', 'Standard', 'Basic', 'Free']; // Roles allowed for this route
+//     if (!allowedRoles.includes(userRole)) {
+//       return res.status(403).json({ message: 'Forbidden' });
+//     }
+
+//     next();
+//   } catch (error) {
+//     console.error('Error checking Free role:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
