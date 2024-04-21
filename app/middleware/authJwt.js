@@ -57,7 +57,7 @@ isPro = async (req, res, next) => {
 
     const query = `
       SELECT "Role" FROM public."User"
-      WHERE ID = $1;
+      WHERE "ID" = $1;
     `;
 
     const result = await pool.query(query, [req.userId]);
@@ -83,7 +83,7 @@ isStandard = async (req, res, next) => {
 
     const query = `
       SELECT "Role" FROM public."User"
-      WHERE ID = $1;
+      WHERE "ID" = $1;
     `;
 
     const result = await pool.query(query, [req.userId]);
@@ -109,7 +109,7 @@ isBasic = async (req, res, next) => {
 
     const query = `
       SELECT "Role" FROM public."User"
-      WHERE ID = $1;
+      WHERE "ID" = $1;
     `;
 
     const result = await pool.query(query, [req.userId]);
@@ -135,7 +135,7 @@ isFree = async (req, res, next) => {
 
     const query = `
       SELECT "Role" FROM public."User"
-      WHERE ID = $1;
+      WHERE "ID" = $1;
     `;
 
     const result = await pool.query(query, [req.userId]);
