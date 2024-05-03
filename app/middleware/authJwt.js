@@ -74,7 +74,7 @@ checkRole = async (req, res, next) => {
 
     const requiredRoleResult = await pool.query(requiredRoleQuery, [requiredRole]);
     const requiredRolePriority = requiredRoleResult.rows[0].Priority;
-    console.log(userRolePriority, requiredRolePriority);
+    // console.log(userRolePriority, requiredRolePriority);
 
     // Check if user's role priority is higher than or equal to the required role
     if (userRolePriority <= requiredRolePriority) {

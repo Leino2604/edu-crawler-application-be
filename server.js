@@ -4,11 +4,12 @@ const { Client } = require('pg');
 
 const app = express();
 
-var corsOptions = {
-  origin: "https://edu-crawler-application-be.onrender.com:9000"
-};
+// var corsOptions = {
+//   origin: "https://edu-crawler-application-be.onrender.com:9000"
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());

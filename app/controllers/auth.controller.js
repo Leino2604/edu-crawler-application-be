@@ -46,8 +46,8 @@ exports.signin = async (req, res) => {
       return res.status(401).json({ message: 'Invalid Username or Password' });
     }
 
-    console.log(user.Password);
-    console.log(Password);
+    // console.log(user.Password);
+    // console.log(Password);
     const validPassword = bcrypt.compareSync(Password, user.Password);
     if (!validPassword) {
       return res.status(401).json({ message: 'Invalid Username or Password' });
