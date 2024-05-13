@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const controller = require("../controllers/user.controller");
+const UserController = require("../controllers/user.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -10,24 +10,24 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/test/all", controller.allAccess);
+  app.get("/api/test/all", UserController.allAccess);
 
   app.get(
     "/api/test/user",
     [authJwt.verifyToken],
-    controller.UserBoard
+    UserController.UserBoard
   );
 
   // app.get(
   //   "/api/test/manager",
   //   [authJwt.verifyToken, authJwt.isManager],
-  //   controller.ManagerBoard
+  //   UserController.ManagerBoard
   // );
 
   app.get(
     "/api/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
-    controller.AdminBoard
+    UserController.AdminBoard
   );
 
   // app.get("/api/test/:role", async (req, res) => {
@@ -46,8 +46,8 @@ module.exports = function(app) {
   //     return res.status(error.status || 500).json({ message: error.message });
   //   }
 
-  //   controller.UserBoard(req, res); // Call controller function
+  //   UserController.UserBoard(req, res); // Call UserController function
   // });
 
-  app.get("/api/test/:role", [authJwt.verifyToken, authJwt.checkRole], controller.UserBoard);
+  app.get("/api/test/:role", [authJwt.verifyToken, authJwt.checkRole], UserController.UserBoard);
 };
