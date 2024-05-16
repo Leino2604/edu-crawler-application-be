@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { Client } = require('pg');
+const schedule = require('node-schedule');
 
 const app = express();
 
@@ -22,11 +23,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to EduCrawler application." });
 });
 
-// Load database configuration from separate file
-// const dbConfig = require('./app/config/db.config');
-
-// const client = new Client(dbConfig); // Use dbConfig object
-
 const pool = require('./app/utils/db_connect');
 
 pool.connect()
@@ -41,6 +37,20 @@ pool.connect()
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 require('./app/routes/admin.routes')(app);
+
+//Email
+// Công việc chạy mỗi phút
+const job1 = schedule.scheduleJob('*/1 * * * *', function(){
+  console.log('Công việc này chạy mỗi phút');
+  console.log(Date());
+});
+
+// Công việc chạy mỗi ngày lúc 23:59
+const job2 = schedule.scheduleJob('27 23 * * *', function(){
+  console.log('Công việc này chạy mỗi ngày lúc 23:59');
+  console.log(Date());
+});
+
 
 
 // set port, listen for requests
