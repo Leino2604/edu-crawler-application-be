@@ -46,8 +46,8 @@ const job1 = schedule.scheduleJob('*/1 * * * *', function(){
 });
 
 // Công việc chạy mỗi ngày lúc 23:59
-const job2 = schedule.scheduleJob('27 23 * * *', function(){
-  console.log('Công việc này chạy mỗi ngày lúc 23:59');
+const job2 = schedule.scheduleJob('33 23 * * *', function(){
+  console.log('Công việc này chạy mỗi ngày lúc 23:33');
   console.log(Date());
 });
 
