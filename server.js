@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { Client } = require('pg');
 const schedule = require('node-schedule');
+const spiderScheduleList = require('./app/utils/schedule_email_noti');
 
 const app = express();
 
@@ -39,17 +40,17 @@ require('./app/routes/user.routes')(app);
 require('./app/routes/admin.routes')(app);
 
 //Email
-// Công việc chạy mỗi phút
+// Check schedule chạy mỗi phút
 const job1 = schedule.scheduleJob('*/1 * * * *', function(){
-  console.log('Công việc này chạy mỗi phút');
   console.log(Date());
+  spiderScheduleList();
 });
 
 // Công việc chạy mỗi ngày lúc 23:59
-const job2 = schedule.scheduleJob('33 23 * * *', function(){
-  console.log('Công việc này chạy mỗi ngày lúc 23:33');
-  console.log(Date());
-});
+// const job2 = schedule.scheduleJob('33 23 * * *', function(){
+//   console.log('Công việc này chạy mỗi ngày lúc 23:33');
+//   console.log(Date());
+// });
 
 
 

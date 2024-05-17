@@ -1,4 +1,5 @@
 const pool = require('../utils/db_connect');
+const isAdmin = require('../middleware/index').authJwt
 
 const bcrypt = require("bcryptjs");
 
