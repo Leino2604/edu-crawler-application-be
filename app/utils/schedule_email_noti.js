@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const pool = require("./db_connect");
 
 const getScheduleList = async () => {
-    await pool.connect();
+    // await pool.connect();
 
     try {
         const query = `
@@ -64,7 +64,7 @@ const getScheduleList = async () => {
 
         
 
-        await pool.end();
+        // await pool.end();
 
     } catch (e) {
         console.error('Error on get Schedule:', e);
